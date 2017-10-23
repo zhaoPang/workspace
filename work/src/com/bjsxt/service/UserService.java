@@ -3,6 +3,7 @@ package com.bjsxt.service;
 import java.util.List;
 import java.util.Map;
 
+import com.bjsxt.pojo.Address;
 import com.bjsxt.pojo.User;
 
 public interface UserService {
@@ -34,4 +35,11 @@ public interface UserService {
 	 * @return	返回修改后的用户对象
 	 */
 	User updateUser(User user);
+
+	/**
+	 * 根据用户id查询用户的地址
+	 * @param userId
+	 * @return
+	 */
+	List<Address> listUserAddressesById(String userId);
 }

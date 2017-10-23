@@ -3,6 +3,7 @@ package com.bjsxt.pojo;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class User implements Serializable{
 	private Integer id;
@@ -12,6 +13,8 @@ public class User implements Serializable{
 	private Date birthday;
 	private Date lastLoginTime;
 	private int loginHits;
+	private List<Address> addressesList;
+	
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -57,6 +60,14 @@ public class User implements Serializable{
 	}
 	public void setLoginHits(int loginHits) {
 		this.loginHits = loginHits;
+	}
+	
+	
+	public List<Address> getAddressesList() {
+		return addressesList;
+	}
+	public void setAddressesList(List<Address> addressesList) {
+		this.addressesList = addressesList;
 	}
 	@Override
 	public int hashCode() {

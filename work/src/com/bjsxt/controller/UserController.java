@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bjsxt.pojo.Address;
 import com.bjsxt.pojo.User;
 import com.bjsxt.service.UserService;
 import com.bjsxt.service.impl.UserServiceImpl;
@@ -107,7 +108,19 @@ public class UserController extends HttpServlet {
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 		}
 	}
-
+	
+	private void listUserAddresses(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		UserService userService = new UserServiceImpl();
+		try {
+			String userId = request.getParameter("userId");
+			 List<Address> listUserAddresses = userService.listUserAddressesById(userId);
+			 System.out.println(listUserAddresses);
+			response.sendRedirect(request.getContextPath() + "/user/toMain.action");
+		} catch (Exception e) {
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
+		}
+	}
+	
 	private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserService userService = new UserServiceImpl();
 		try {

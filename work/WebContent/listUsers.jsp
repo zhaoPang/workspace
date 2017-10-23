@@ -89,7 +89,9 @@
 			var id = $("<td  align='center'  >" + (user.id) + "</td>");
 			tr.append(id);
 
-			var name = $("<td  align='center'  >" + user.name + "</td>");
+			var name = $("<td  align='center'  >"+
+			"<a href='${pageContext.request.contextPath}/user/listUserAddresses.action?userId='"+(user.id)+" >" + user.name + "</a>"+
+			"</td>");
 			tr.append(name);
 
 			var loginName = $("<td  align='center'  >" + user.loginName

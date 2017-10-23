@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjsxt.mapper.UserDao">
+	<sql id="fileds">
+		id,name,login_name loginName, login_pswd loginPswd,
+		birthday,
+		last_login_time lastLoginTime, login_hits loginHits
+	</sql>
+
+	<sql id="where">
+		<if test="id!=null">
+			and id=#{id}
+		</if>
+		<if test="name!=null">
+			and name like '%${name}%'
+		</if>
+		<if test="loginName!=null">
+			and login_name = #{loginName}
+		</if>
+		<if test="loginPswd!=null">
+			and login_pswd = #{loginPswd}
+		</if>
+		<if test="birthday!=null">
+			and birthday = #{startBirthday}
+		</if>
+		<if test="lastLoginTime!=null">
+			and last_login_time &lt; #{lastLoginTime}
+		</if>
+		
+		<if test="loginHits!=0 and loginHits!=null">
+			and login_hits &lt; #{loginHits}
+		</if>
+		
+		<if test="ids!=null">
+			<foreach collection="ids" open="and id in (" close=")" separator="," item="id">
+				#{id}
+			</foreach>
+		</if>
+	</sql>
+		<sql id="setCause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="loginName != null">
+					login_name = #{loginName},
+				</if>
+				<if test="loginPswd != null">
+					login_pswd = #{loginPswd},
+				</if>
+				<if test="birthday != null">
+					birthday = #{birthday},
+				</if>
+				<if test="lastLoginTime != null">
+					last_login_time = #{lastLoginTime},
+				</if>
+				<if test="loginHits != 0">
+					login_hits = #{loginHits},
+				</if>
+			</trim>				
+		</set>
+	</sql>
+	
+
+	<select id="selectUsers" resultType="User">
+		select
+		<include refid="fileds" />
+		from tb_user
+		<where>
+			<include refid="where" />
+		</where>
+		<if test="start!=null and rows!=null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select
+		count(*)
+		from tb_user
+	</select>
+
+	<insert id="insertUser">
+		insert into tb_user(name,login_name,
+		login_pswd,birthday,last_login_time, login_hits)
+		values
+		(#{name},#{loginName},#{loginPswd},#{birthday},#{lastLoginTime},#{loginHits})
+		<selectKey keyColumn="id" keyProperty="id" resultType="int">
+			select @@identity as id
+		</selectKey>
+	</insert>
+
+	<update id="updateUser">
+		update tb_user
+		<include refid="setCause"/>
+		where id=#{id}
+	</update>
+
+
+</mapper>

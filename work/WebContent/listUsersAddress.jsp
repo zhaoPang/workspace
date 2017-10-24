@@ -7,24 +7,30 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
 <script type="text/javascript">
 	
 	function deleteAddress(id) {
-		alert(id);
-	}
-	function AddAddress(userId) {
-		alert(userId);
+		var isdelete = window.confirm("是否删除？");
+		
+		if(isdelete){
+			$.post("${pageContext.request.contextPath}/user/deleteAddressById.action",{"id":id},function(data){
+				if(data=="success"){
+					$("#tr_"+id).remove();
+				}
+			});
+		}
 	}
 	
 </script>
 </head>
 <body>
-	<form action="">
+	<form action="${pageContext.request.contextPath}/user/addUsersAddress.action">
+		<input type="hidden" name="userId" value="${param.userId}" />
 		<table border="solid 1px black" width="500px">
 			<thead>
-				<tr>添加地址</tr>
+				<tr>添加地址
+				</tr>
 			</thead>
 			<tr>
 				<td width="100px" height="30px">省</td>
@@ -42,7 +48,7 @@
 					style="width: 99%; height: 25px" /></td>
 			</tr>
 			<tr align="center">
-				<td colspan="2"><input type="button" value="添加" onclick="AddAddress(${param.userId})" /> </td>
+				<td colspan="2"><input type="submit" value="添加" /></td>
 			</tr>
 		</table>
 	</form>
@@ -55,7 +61,7 @@
 			<th>操作</th>
 		</tr>
 		<c:forEach items="${addressList}" var="address">
-			<tr>
+			<tr id="tr_${address.id}">
 				<td>${address.province}</td>
 				<td>${address.city}</td>
 				<td>${address.subdistrict}</td>

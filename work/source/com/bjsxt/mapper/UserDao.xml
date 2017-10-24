@@ -73,6 +73,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			limit #{start},#{rows}
 		</if>
 	</select>
+	<select id="selectUserById" resultType="User">
+		select
+		<include refid="fileds"/>
+		from tb_user
+		where id = #{id}
+	</select>
 	
 	<select id="getCount" resultType="int">
 		select

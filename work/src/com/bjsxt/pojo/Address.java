@@ -4,13 +4,14 @@ import java.io.Serializable;
 
 public class Address implements Serializable{
 	private Integer id;
-	private Integer userId;
 	private String province;
 	private String city;
 	private String subdistrict;
+	
+	private User user;
+	
 	public Address() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Integer getId() {
@@ -21,12 +22,13 @@ public class Address implements Serializable{
 		this.id = id;
 	}
 
-	public Integer getUserId() {
-		return userId;
+
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getProvince() {
@@ -61,7 +63,7 @@ public class Address implements Serializable{
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((province == null) ? 0 : province.hashCode());
 		result = prime * result + ((subdistrict == null) ? 0 : subdistrict.hashCode());
-		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -94,22 +96,17 @@ public class Address implements Serializable{
 				return false;
 		} else if (!subdistrict.equals(other.subdistrict))
 			return false;
-		if (userId == null) {
-			if (other.userId != null)
+		if (user == null) {
+			if (other.user != null)
 				return false;
-		} else if (!userId.equals(other.userId))
+		} else if (!user.equals(other.user))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Address [id=" + id + ", userId=" + userId + ", province=" + province + ", city=" + city
-				+ ", subdistrict=" + subdistrict + "]";
+		return "Address [id=" + id + ", province=" + province + ", city=" + city + ", subdistrict=" + subdistrict
+				+ ", user=" + user + "]";
 	}
-	
-	
-	
-	
-	
 }

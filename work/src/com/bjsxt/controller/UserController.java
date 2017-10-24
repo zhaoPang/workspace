@@ -22,9 +22,13 @@ import com.bjsxt.service.impl.UserServiceImpl;
 import com.bjsxt.util.ServletUtil;
 import com.google.gson.Gson;
 
+import oracle.net.aso.a;
+
 public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	protected void service (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private UserService userService;
+	protected void service(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String url = request.getRequestURI();
 		String methodName = ServletUtil.getMethodName(url);
 		if (null == methodName) {
@@ -52,22 +56,22 @@ public class UserController extends HttpServlet {
 
 	private void listUsers(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		UserService userService = new UserServiceImpl();
+		this.userService = new UserServiceImpl();
 		try {
 			String indexStr = request.getParameter("index");
 			String sizeStr = request.getParameter("size");
 			int page = 1;
-			try{
+			try {
 				page = Integer.parseInt(indexStr);
-			}catch(NumberFormatException e){
+			} catch (NumberFormatException e) {
 			}
 			int size = 5;
-			try{
+			try {
 				size = Integer.parseInt(sizeStr);
-			}catch(NumberFormatException e){
+			} catch (NumberFormatException e) {
 			}
-			
-			Map<String,Object> params  = userService.listUsersByPage(page,size);
+
+			Map<String, Object> params = userService.listUsersByPage(page, size);
 			Gson gson = new Gson();
 			String json = gson.toJson(params);
 			response.setContentType("application/Json;charSet=utf-8");
@@ -83,8 +87,9 @@ public class UserController extends HttpServlet {
 		response.sendRedirect(request.getContextPath() + "/main.jsp");
 	}
 
-	private void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserService userService = new UserServiceImpl();
+	private void register(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		 this.userService = new UserServiceImpl();
 		try {
 			String name = request.getParameter("name");
 			String loginName = request.getParameter("loginName");
@@ -95,10 +100,10 @@ public class UserController extends HttpServlet {
 			user.setLoginName(loginName);
 			user.setLoginPswd(loginPswd);
 			Date birthday = null;
-			try{
+			try {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				birthday = simpleDateFormat.parse(birthdayStr);
-			}catch(ParseException e){
+			} catch (ParseException e) {
 				birthday = null;
 			}
 			user.setBirthday(birthday);
@@ -109,22 +114,58 @@ public class UserController extends HttpServlet {
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 		}
 	}
-	
-	private void listUserAddresses(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserService userService = new UserServiceImpl();
+
+	private void listUserAddresses(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		 this.userService = new UserServiceImpl();
 		try {
 			String userId = request.getParameter("userId");
-			 List<Address> listUserAddresses = userService.listUserAddressesById(userId);
-			 request.setAttribute("addressList", listUserAddresses);
-//			 request.setAttribute("userId", userId);
-			 request.getRequestDispatcher("/listUsersAddress.jsp").forward(request, response);
+			List<Address> listUserAddresses = userService.listUserAddressesById(userId);
+			request.setAttribute("addressList", listUserAddresses);
+			request.getRequestDispatcher("/listUsersAddress.jsp").forward(request, response);
 		} catch (Exception e) {
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
 		}
 	}
+
+	private void addUsersAddress(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		 this.userService = new UserServiceImpl();
+		try {
+			String userId = request.getParameter("userId");
+			String province = request.getParameter("province");
+			String city = request.getParameter("city");
+			String subdistrict = request.getParameter("subdistrict");
+			this.userService.addUserAddress(userId,province,city,subdistrict);
+			response.sendRedirect(request.getContextPath()+"/user/listUserAddresses.action?userId="+userId);
+		} catch (Exception e) {
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
+		}
+	}
+
+	private void deleteAddressById(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		 this.userService = new UserServiceImpl();
+		try {
+			String idStr = request.getParameter("id");
+			int id = Integer.parseInt(idStr);
+			int rows = this.userService.deleteAddressById(id);
+			Gson gson = new Gson();
+			response.setContentType("application/Json;charSet=utf-8");
+			if(rows == 1){
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+			response.flushBuffer();
+		} catch (Exception e) {
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
+		}
+	}
+
 	
 	private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserService userService = new UserServiceImpl();
+		 this.userService = new UserServiceImpl();
 		try {
 			String loginName = request.getParameter("loginName");
 			String LoginPswd = request.getParameter("loginPswd");
@@ -134,5 +175,5 @@ public class UserController extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
 		}
 	}
-	
+
 }

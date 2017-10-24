@@ -9,6 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <script type="text/javascript" src="js/jquery.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		myAjax("${pageContext.request.contextPath}/user/listUsers.action", {});
@@ -74,7 +75,6 @@
 					return;
 				}
 				eval("result="+result);
-				console.log(result.items);
 				showTableView(result);
 			}
 		});

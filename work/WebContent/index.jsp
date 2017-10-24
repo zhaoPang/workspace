@@ -11,10 +11,6 @@
 	function register() {
 		location.href = "${pageContext.request.contextPath}/register.jsp";
 	}
-	function isok() {
-		var arr = [1,2,3,4,5];
-		return arr;
-	}
 </script>
 <body>
 

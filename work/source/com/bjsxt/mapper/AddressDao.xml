@@ -41,12 +41,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 	</sql>
 	
-	<select id="listUserAddresses" resultType="Address">
-		select <include refid="allColumn"/>
-		from tb_address
+	<resultMap type="Address" id="addressMap">
+		<id column="id" property="id"/>
+		<result column="province" property="province" />
+		<result column="city" property="city" />
+		<result column="subdistrict" property="subdistrict" />
+		<association property="user" javaType="User"> 
+			<id column="user_id" property="id"/>
+			<result column="name" property="name"/>	
+			<result column="login_name" property="loginName"/>	
+			<result column="login_pswd" property="loginPswd"/>
+			<result column="birthday" property="birthday"/>
+			<result column="last_login_time" property="lastLoginTime"/>
+			<result column="login_hits" property="loginHits"/>
+		</association>
+	</resultMap>
+	
+	<select id="listUserAddresses" resultMap="addressMap">
+		select 
+		a.id,user_id as userId,province,city,subdistrict,name,
+		login_name loginName, login_pswd loginPswd,birthday,
+		last_login_time lastLoginTime, login_hits loginHits
+		from
+			tb_address a
+				left join
+			tb_user u
+				on a.user_id = u.id
 		<where>
-			<include refid="queryColumn"/>
-		</where> 
+			<include refid="queryColumn" />
+		</where>
 	</select>
+	
+	<insert id="insertAddress">
+		insert into tb_address(user_id,province,city,subdistrict) values(#{userId},#{province},#{city},#{subdistrict});
+	</insert>
+	
+	<delete id="deleteAddressById">
+		delete from tb_address where id=#{id}
+	</delete>
 
 </mapper>

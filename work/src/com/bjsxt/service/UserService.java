@@ -42,4 +42,22 @@ public interface UserService {
 	 * @return
 	 */
 	List<Address> listUserAddressesById(String userId);
+
+	/**
+	 * 给用户添加地址
+	 * @param userId	用户id
+	 * @param province	省
+	 * @param city		市
+	 * @param subdistrict	街道
+	 * @return
+	 */
+	int addUserAddress(String userId, String province, String city, String subdistrict);
+	
+	/**
+	 * 根据地址id删除地址
+	 * @param 地址id
+	 * @return
+	 */
+	int deleteAddressById(Integer id);
+	
 }

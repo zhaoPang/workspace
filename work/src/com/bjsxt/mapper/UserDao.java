@@ -41,5 +41,12 @@ public interface UserDao {
 	 * @return
 	 */
 	int getCount();
+	
+	/**
+	 * 根据id查询用户
+	 * @param id
+	 * @return
+	 */
+	User selectUserById(Integer id);
 
 }

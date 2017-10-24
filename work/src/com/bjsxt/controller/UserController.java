@@ -37,6 +37,7 @@ public class UserController extends HttpServlet {
 			method.invoke(this, request, response);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
+			System.out.println(url);
 			response.sendRedirect(request.getContextPath() + "/404.jsp");
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -114,8 +115,9 @@ public class UserController extends HttpServlet {
 		try {
 			String userId = request.getParameter("userId");
 			 List<Address> listUserAddresses = userService.listUserAddressesById(userId);
-			 System.out.println(listUserAddresses);
-			response.sendRedirect(request.getContextPath() + "/user/toMain.action");
+			 request.setAttribute("addressList", listUserAddresses);
+//			 request.setAttribute("userId", userId);
+			 request.getRequestDispatcher("/listUsersAddress.jsp").forward(request, response);
 		} catch (Exception e) {
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
 		}

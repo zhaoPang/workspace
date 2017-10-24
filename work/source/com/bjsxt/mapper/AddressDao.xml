@@ -44,7 +44,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="listUserAddresses" resultType="Address">
 		select <include refid="allColumn"/>
 		from tb_address
-		where <include refid="queryColumn"/>
+		<where>
+			<include refid="queryColumn"/>
+		</where> 
 	</select>
 
 </mapper>

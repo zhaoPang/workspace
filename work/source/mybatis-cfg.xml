@@ -20,7 +20,6 @@
 		</environment>
 	</environments>
 	<mappers>
-		<mapper resource="com/bjsxt/mapper/UserDao.xml"/>
-		<mapper resource="com/bjsxt/mapper/AddressDao.xml"/>
+		<package name="com/bjsxt/mapper"/>
 	</mappers>
 </configuration>

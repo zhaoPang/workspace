@@ -22,6 +22,43 @@
 		});
 
 	}
+	Date.prototype.formatDate = function(type){
+		var year = this.getFullYear();
+		var month = this.getMonth();
+		var day = this.getDay();
+		month = ""+month;
+		if(month.length == 1){
+			month = "0"+month;
+		}
+		day = ""+day;
+		if(day.length==1){
+			day = "0"+day;
+		}
+		var time = ""+year+"/"+month+"/"+day;
+		if(type == "date"){
+			return time;
+		}else if(type == "timestamp"){
+			var hour = this.getHours();
+			hour = ""+hour;
+			if(hour.length == 1){
+				hour = "0"+hour;
+			}
+			var minter = this.getMinutes();
+			minter = ""+minter;
+			if(minter.length == 1){
+				minter = "0"+minter;
+			}
+			var second = this.getSeconds();
+			second = ""+second
+			if(second.length == 1){
+				second = "0"+second;
+			}
+			time = time+" "+hour+":"+minter+":"+second;
+			return time;
+		}else{
+			return "";
+		}		
+	}
 
 	//AJAX获取数据
 	function myAjax(_url, _date) {
@@ -90,7 +127,7 @@
 			tr.append(id);
 
 			var name = $("<td  align='center'  >"+
-			"<a href='${pageContext.request.contextPath}/user/listUserAddresses.action?userId='"+(user.id)+" >" + user.name + "</a>"+
+			"<a href='${pageContext.request.contextPath}/user/listUserAddresses.action?userId="+(user.id)+"'>" + user.name + "</a>"+
 			"</td>");
 			tr.append(name);
 
@@ -98,11 +135,10 @@
 					+ "</td>");
 			tr.append(loginName);
 
-			var birthday = $("<td  align='center'  >" + user.birthday + "</td>");
+			var birthday = $("<td  align='center'  >" + new Date(user.birthday).formatDate("date") + "</td>");
 			tr.append(birthday);
-			console.log(new Date(user.birthday).toLocaleDateString);
 			var last_login_time = $("<td  align='center'  >"
-					+ user.lastLoginTime + "</td>");
+					+ new Date(user.lastLoginTime).formatDate("timestamp")  + "</td>");
 			tr.append(last_login_time);
 
 			var login_hits = $("<td  align='center'  >" + user.loginHits

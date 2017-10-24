@@ -19,6 +19,7 @@ public class ServletUtil {
 		if (index2 == -1 || index2 < index1) {
 			index2 = url.length();
 		}
+		
 		if (index1 > -1) {
 			String methodName = url.substring(index1, index2);
 			return methodName;

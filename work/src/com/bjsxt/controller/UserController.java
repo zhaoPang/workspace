@@ -10,10 +10,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.bjsxt.pojo.Address;
 import com.bjsxt.pojo.User;
@@ -24,77 +42,64 @@ import com.google.gson.Gson;
 
 import oracle.net.aso.a;
 
-public class UserController extends HttpServlet {
+@SuppressWarnings("unused")
+
+@Controller
+public class UserController{
 	private static final long serialVersionUID = 1L;
+	
+	@Autowired
+	@Qualifier("userService")
 	private UserService userService;
-	protected void service(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String url = request.getRequestURI();
-		String methodName = ServletUtil.getMethodName(url);
-		if (null == methodName) {
-			response.sendRedirect(request.getContextPath() + "/404.jsp");
-			return;
-		}
-		try {
-			Method method = this.getClass().getDeclaredMethod(methodName, HttpServletRequest.class,
-					HttpServletResponse.class);
-			method.invoke(this, request, response);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			System.out.println(url);
-			response.sendRedirect(request.getContextPath() + "/404.jsp");
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-	}
 
-	private void listUsers(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		this.userService = new UserServiceImpl();
-		try {
-			String indexStr = request.getParameter("index");
-			String sizeStr = request.getParameter("size");
-			int page = 1;
-			try {
-				page = Integer.parseInt(indexStr);
-			} catch (NumberFormatException e) {
-			}
-			int size = 5;
-			try {
-				size = Integer.parseInt(sizeStr);
-			} catch (NumberFormatException e) {
-			}
 
+	@RequestMapping(value="/listUsers",produces ="application/json;charset=UTF-8")
+	@ResponseBody
+	private String listUsers(@RequestParam(value="index",defaultValue="1")int page, @RequestParam(defaultValue="5")int size) throws IOException {
+		try {
 			Map<String, Object> params = userService.listUsersByPage(page, size);
 			Gson gson = new Gson();
 			String json = gson.toJson(params);
-			response.setContentType("application/Json;charSet=utf-8");
-			response.getWriter().print(json);
-			response.flushBuffer();
+			System.out.println(json);
+			return json;
 		} catch (Exception e) {
-			e.printStackTrace();
-			response.getWriter().print("error");
+			return "error";
 		}
 	}
 
-	private void toMain(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect(request.getContextPath() + "/main.jsp");
+	@RequestMapping("/toMain")
+	private String toMain(){
+		return "/main.jsp";
 	}
 
-	private void register(HttpServletRequest request, HttpServletResponse response)
+	@RequestMapping("/register")
+	private ModelAndView register(User user) {
+		ModelAndView mv = new ModelAndView();
+		try {
+			if (null == user.getLoginName() || null == user.getLoginPswd() 
+					|| user.getLoginName().trim().equals("") || user.getLoginPswd().trim().equals("")) {
+				throw new RuntimeException();
+			}
+			User register = userService.register(user);
+			mv.setViewName("/index.jsp");
+		} catch (Exception e) {
+			mv.addObject("error", "注册失败");
+			mv.setViewName("/register.jsp");
+		}
+		return mv;
+		
+	}
+
+	private void register1(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		 this.userService = new UserServiceImpl();
 		try {
 			String name = request.getParameter("name");
 			String loginName = request.getParameter("loginName");
 			String loginPswd = request.getParameter("loginPswd");
 			String birthdayStr = request.getParameter("birthday");
+			if (null == loginName || null == loginPswd || loginName.trim().equals("") || loginPswd.trim().equals("")) {
+				throw new RuntimeException();
+			}
 			User user = new User();
 			user.setName(name);
 			user.setLoginName(loginName);
@@ -115,65 +120,67 @@ public class UserController extends HttpServlet {
 		}
 	}
 
-	private void listUserAddresses(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		 this.userService = new UserServiceImpl();
+	@RequestMapping("/listUserAddresses")
+	private ModelAndView listUserAddresses(String userId) {
+		ModelAndView mv = new ModelAndView();
 		try {
-			String userId = request.getParameter("userId");
 			List<Address> listUserAddresses = userService.listUserAddressesById(userId);
-			request.setAttribute("addressList", listUserAddresses);
-			request.getRequestDispatcher("/listUsersAddress.jsp").forward(request, response);
+			mv.addObject("addressList", listUserAddresses);
+			mv.setViewName("/listUsersAddress.jsp");
+			System.out.println(listUserAddresses);
 		} catch (Exception e) {
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
+			mv.setViewName("/index.jsp");
 		}
+		return mv;
 	}
 
-	private void addUsersAddress(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		 this.userService = new UserServiceImpl();
+	@RequestMapping("/addUsersAddress")
+	public ModelAndView addUsersAddress(String userId, String province, String city, String subdistrict) {
+		ModelAndView mv = new ModelAndView();
 		try {
-			String userId = request.getParameter("userId");
-			String province = request.getParameter("province");
-			String city = request.getParameter("city");
-			String subdistrict = request.getParameter("subdistrict");
-			this.userService.addUserAddress(userId,province,city,subdistrict);
-			response.sendRedirect(request.getContextPath()+"/user/listUserAddresses.action?userId="+userId);
-		} catch (Exception e) {
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
-		}
-	}
-
-	private void deleteAddressById(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		 this.userService = new UserServiceImpl();
-		try {
-			String idStr = request.getParameter("id");
-			int id = Integer.parseInt(idStr);
-			int rows = this.userService.deleteAddressById(id);
-			Gson gson = new Gson();
-			response.setContentType("application/Json;charSet=utf-8");
-			if(rows == 1){
-				response.getWriter().print("success");
-			}else{
-				response.getWriter().print("error");
+			if (null == province || null == city || null == subdistrict || province.trim().equals("")
+					|| city.trim().equals("") || subdistrict.trim().equals("")) {
+				throw new RuntimeException();
 			}
-			response.flushBuffer();
+			this.userService.addUserAddress(userId, province, city, subdistrict);
+			mv.setViewName("/listUserAddresses");
+			mv.addObject("userId", userId);
 		} catch (Exception e) {
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
+			mv.setViewName("/404.jsp");
+		}
+		return mv;
+	}
+
+	@RequestMapping("/deleteAddressById")
+	@ResponseBody
+	public String deleteAddressById(int id) {
+		try {
+			int rows = this.userService.deleteAddressById(id);
+			if (rows == 1) {
+				return "success";
+			} else {
+				throw new RuntimeException();
+			}
+		} catch (Exception e) {
+			return "error";
 		}
 	}
 
-	
-	private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 this.userService = new UserServiceImpl();
+	@RequestMapping("/login")
+	public String login(String loginName, String loginPswd) {
 		try {
-			String loginName = request.getParameter("loginName");
-			String LoginPswd = request.getParameter("loginPswd");
-			User loginUser = userService.login(loginName, LoginPswd);
-			response.sendRedirect(request.getContextPath() + "/user/toMain.action");
+			System.out.println(loginName);
+			System.out.println(loginPswd);
+			User loginUser = userService.login(loginName, loginPswd);
+			return "toMain";
 		} catch (Exception e) {
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
+			return "/index.jsp";
 		}
+	}
+
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
 	}
 
 }

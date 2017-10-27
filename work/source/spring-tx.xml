@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XSD约束的XML配置文件 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 事务管理通知 在什么方法的什么位置添加提交或回滚。 -->
+	<tx:advice transaction-manager="transactionManager" id="txAdvice">
+		<!-- -->
+		<tx:attributes>
+			<tx:method name="listUser*" read-only="true" />
+			<tx:method name="register" rollback-for="java.lang.RuntimeException"
+				isolation="DEFAULT" propagation="REQUIRED" />
+			<tx:method name="login" rollback-for="java.lang.RuntimeException"
+				isolation="DEFAULT" propagation="REQUIRED" />
+			<tx:method name="update*" rollback-for="java.lang.RuntimeException"
+				isolation="DEFAULT" propagation="REQUIRED" />
+			<tx:method name="add*" rollback-for="java.lang.RuntimeException"
+				isolation="DEFAULT" propagation="REQUIRED" />
+			<tx:method name="delete*" rollback-for="java.lang.RuntimeException"
+				isolation="DEFAULT" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 配置AOP -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.bjsxt.service.*.*(..) )"
+			id="pointcutName" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcutName" />
+	</aop:config>
+
+</beans>

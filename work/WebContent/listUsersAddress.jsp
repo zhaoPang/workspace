@@ -14,8 +14,10 @@
 		var isdelete = window.confirm("是否删除？");
 		
 		if(isdelete){
-			$.post("${pageContext.request.contextPath}/user/deleteAddressById.action",{"id":id},function(data){
+			$.post("${pageContext.request.contextPath}/deleteAddressById",{"id":id},function(data){
+				alert(data);
 				if(data=="success"){
+					alert("#tr_"+id);
 					$("#tr_"+id).remove();
 				}
 			});
@@ -25,7 +27,7 @@
 </script>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath}/user/addUsersAddress.action">
+	<form action="${pageContext.request.contextPath}/addUsersAddress">
 		<input type="hidden" name="userId" value="${param.userId}" />
 		<table border="solid 1px black" width="500px">
 			<thead>

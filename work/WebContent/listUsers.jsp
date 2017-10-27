@@ -8,17 +8,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		myAjax("${pageContext.request.contextPath}/user/listUsers.action", {});
+		myAjax("${pageContext.request.contextPath}/listUsers", {});
 
 	});
 	//根据条件查询
 	function searchCounter() {
 		var size = $("#size").val();
-		myAjax("${pageContext.request.contextPath}/user/listUsers.action", {
+		myAjax("${pageContext.request.contextPath}/listUsers", {
 			"size" : size
 		});
 
@@ -75,6 +75,7 @@
 					return;
 				}
 				eval("result="+result);
+				console.log(result);
 				showTableView(result);
 			}
 		});
@@ -87,7 +88,7 @@
 			return;
 		}
 		var size = $("#size").val();
-		myAjax("${pageContext.request.contextPath}/user/listUsers.action", {
+		myAjax("${pageContext.request.contextPath}/listUsers", {
 			"size" : size,
 			"index" : index
 		});
@@ -127,7 +128,7 @@
 			tr.append(id);
 
 			var name = $("<td  align='center'  >"+
-			"<a href='${pageContext.request.contextPath}/user/listUserAddresses.action?userId="+(user.id)+"'>" + user.name + "</a>"+
+			"<a href='${pageContext.request.contextPath}/listUserAddresses?userId="+(user.id)+"'>" + user.name + "</a>"+
 			"</td>");
 			tr.append(name);
 

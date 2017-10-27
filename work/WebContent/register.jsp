@@ -8,7 +8,7 @@
 </head>
 <body>
 	<span style="font-size: 20px;color: red">${error }</span>
-	<form action="${pageContext.request.contextPath}/user/register.action"
+	<form action="${pageContext.request.contextPath}/register"
 		style="padding-top: 100px" method="post">
 		<table cellspacing="1" border="1" align="center" width="400px"
 			style="text-align: center;">

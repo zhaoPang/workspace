@@ -59,5 +59,11 @@ public interface UserService {
 	 * @return
 	 */
 	int deleteAddressById(Integer id);
+
+	/**
+	 * 批量添加地址
+	 * @param adds
+	 */
+	int addUserAddressList(List<Address> adds);
 	
 }

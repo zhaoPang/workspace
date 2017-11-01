@@ -32,10 +32,6 @@
 		<property name="basePackage" value="com.bjsxt.mapper"></property>
 	</bean>
 
-	<bean id="userService" class="com.bjsxt.service.impl.UserServiceImpl">
-		<property name="userDao" ref="userDao"/>
-		<property name="addressDao" ref="addressDao"/>
-	</bean>
 	
 
 </beans>

@@ -12,13 +12,13 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		myAjax("${pageContext.request.contextPath}/listUsers", {});
+		myAjax("${pageContext.request.contextPath}/listUsers.do", {});
 
 	});
 	//根据条件查询
 	function searchCounter() {
 		var size = $("#size").val();
-		myAjax("${pageContext.request.contextPath}/listUsers", {
+		myAjax("${pageContext.request.contextPath}/listUsers.do", {
 			"size" : size
 		});
 
@@ -88,7 +88,7 @@
 			return;
 		}
 		var size = $("#size").val();
-		myAjax("${pageContext.request.contextPath}/listUsers", {
+		myAjax("${pageContext.request.contextPath}/listUsers.do", {
 			"size" : size,
 			"index" : index
 		});
@@ -128,7 +128,7 @@
 			tr.append(id);
 
 			var name = $("<td  align='center'  >"+
-			"<a href='${pageContext.request.contextPath}/listUserAddresses?userId="+(user.id)+"'>" + user.name + "</a>"+
+			"<a href='${pageContext.request.contextPath}/listUserAddresses.do?userId="+(user.id)+"'>" + user.name + "</a>"+
 			"</td>");
 			tr.append(name);
 

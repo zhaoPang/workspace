@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjsxt.mapper.MenuDao">
+
+	<resultMap type="Menu" id="MenuMap">
+		<id column="menu_id" property="menuId" />
+		<result column="show_text" property="showText" />
+		<result column="location" property="location" />
+		<collection property="childMenu" javaType="java.util.List"
+			ofType="Menu" column="menu_id" select="com.bjsxt.mapper.MenuDao.findMenuByParent" />
+	</resultMap>
+
+	<select id="findMenu" resultMap="MenuMap">
+		SELECT menu_id,
+		show_text,location,parent_menu_id parentMenuId
+		FROM tb_menu
+		where parent_menu_id = 0;
+	</select>
+
+	<select id="findMenuByParent" resultMap="MenuMap">
+		SELECT menu_id,
+		show_text,location,parent_menu_id parentMenuId
+		FROM tb_menu
+		where parent_menu_id = #{parentMenuId};
+	</select>
+</mapper>

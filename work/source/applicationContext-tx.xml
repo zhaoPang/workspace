@@ -23,16 +23,24 @@
 		<!-- -->
 		<tx:attributes>
 			<tx:method name="listUser*" read-only="true" />
+			<tx:method name="find*" read-only="true"/>	
+			
 			<tx:method name="register" rollback-for="java.lang.RuntimeException"
 				isolation="DEFAULT" propagation="REQUIRED" />
+				
 			<tx:method name="login" rollback-for="java.lang.RuntimeException"
 				isolation="DEFAULT" propagation="REQUIRED" />
+				
 			<tx:method name="update*" rollback-for="java.lang.RuntimeException"
 				isolation="DEFAULT" propagation="REQUIRED" />
+				
 			<tx:method name="add*" rollback-for="java.lang.RuntimeException"
 				isolation="DEFAULT" propagation="REQUIRED" />
+				
 			<tx:method name="delete*" rollback-for="java.lang.RuntimeException"
 				isolation="DEFAULT" propagation="REQUIRED" />
+				
+			
 		</tx:attributes>
 	</tx:advice>
 

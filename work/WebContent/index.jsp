@@ -14,7 +14,7 @@
 </script>
 <body>
 
-<form action="${pageContext.request.contextPath}/login" style="padding-top: 100px" method="post">
+<form action="${pageContext.request.contextPath}/login.do" style="padding-top: 100px" method="post">
 	<table cellspacing="1" border="1" align="center" width="400px" style="text-align: center;">
 		<tr>
 			<td width="100px">登录账号</td>
@@ -30,8 +30,6 @@
 			</td>
 		</tr>
 	</table>
-	
-	
 </form>
 
 </body>

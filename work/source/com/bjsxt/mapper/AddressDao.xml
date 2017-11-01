@@ -77,8 +77,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into tb_address(user_id,province,city,subdistrict) values(#{userId},#{province},#{city},#{subdistrict});
 	</insert>
 	
+	<insert id="insertAddressList" >
+		insert into tb_address(user_id,province,city,subdistrict) values
+		
+		<foreach collection="addsMap" item="add" separator="),(" open="(" close=")">
+			#{add.id},#{add.province},#{add.city},#{add.subdistrict}
+		</foreach>
+		
+	</insert>
+	
+	
 	<delete id="deleteAddressById">
 		delete from tb_address where id=#{id}
 	</delete>
+	
+	
 
 </mapper>

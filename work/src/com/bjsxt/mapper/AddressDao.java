@@ -30,4 +30,11 @@ public interface AddressDao {
 	 * @return	删除数据库数据的条数
 	 */
 	int deleteAddressById(Integer id);
+
+	/**
+	 * 批量增加用户地址
+	 * @param addsMap 	value里是用户提交的地址list集合，key值为addsMap
+	 * @return
+	 */
+	int insertAddressList(Map<String, List<Address>> addsMap);
 }

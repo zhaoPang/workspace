@@ -7,14 +7,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/jquery.js"></script>
 <script type="text/javascript">
 	
 	function deleteAddress(id) {
 		var isdelete = window.confirm("是否删除？");
 		
 		if(isdelete){
-			$.post("${pageContext.request.contextPath}/deleteAddressById",{"id":id},function(data){
+			$.post("${pageContext.request.contextPath}/deleteAddressById.do",{"id":id},function(data){
 				alert(data);
 				if(data=="success"){
 					alert("#tr_"+id);
@@ -27,7 +28,7 @@
 </script>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath}/addUsersAddress">
+	<form action="${pageContext.request.contextPath}/addUsersAddress.do">
 		<input type="hidden" name="userId" value="${param.userId}" />
 		<table border="solid 1px black" width="500px">
 			<thead>
@@ -53,8 +54,13 @@
 				<td colspan="2"><input type="submit" value="添加" /></td>
 			</tr>
 		</table>
-	</form>
 
+	</form>
+	<form action="${pageContext.request.contextPath}/addAddressList" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="userId" value="${param.userId}" />
+		<input type="file" name="addressList">
+		<input type="submit" value="批量添加">
+	</form>
 	<table border="solid 1px black" width="500px">
 		<tr>
 			<th>省</th>

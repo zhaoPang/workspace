@@ -16,4 +16,21 @@
 	<!-- 开启注解驱动，就是设置核心组件 -->
 	<mvc:annotation-driven/>	
 	
+	
+	<!-- 静态资源映射 -->
+	<mvc:resources location="/js/" mapping="/js/**" />
+
+	<!-- 配置多文本解析器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 最大上传文件大小 200kB -->
+		<property name="maxUploadSize" value="204800"/>
+		
+		<!-- 内存缓冲区大小 10k -->
+		<property name="maxInMemorySize" value="10240"/>
+		
+		<!-- 字符集 -->
+		<property name="defaultEncoding" value="utf-8"/>
+	</bean>
+	
 </beans>

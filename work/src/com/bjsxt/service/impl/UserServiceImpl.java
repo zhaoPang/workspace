@@ -2,6 +2,7 @@ package com.bjsxt.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
 			Map<String, Object> params = new HashMap<>();
 			params.put("loginName", loginName);
 			params.put("loginPswd", loginPswd);
-			System.out.println(userDao+"----");
+			System.out.println(userDao + "----");
 			List<User> userList = this.userDao.selectUsers(params);
 			if (userList.size() > 0) {
 				User user = userList.get(0);
@@ -169,6 +170,18 @@ public class UserServiceImpl implements UserService {
 		this.addressDao = addressDao;
 	}
 
-	
-	
+	@Override
+	public int addUserAddressList(List<Address> adds) {
+		try{
+			Map<String,List<Address>> addsMap = new LinkedHashMap<>();
+			addsMap.put("addsMap", adds);
+			int rows = addressDao.insertAddressList(addsMap);
+			return rows;
+		}catch(RuntimeException e){
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 }
